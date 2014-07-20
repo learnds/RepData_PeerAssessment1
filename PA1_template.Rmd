@@ -3,10 +3,32 @@
 
 ## Loading and preprocessing the data
 
+```{r echo=TRUE}
+setwd("~/1ML/1John Hopkins/Reproducible Research/Exercises")
 
+dat<-read.csv("activity.csv")
+
+dattime<-strptime(dat$date,"%Y-%m-%d")
+dat<-cbind(dat,dattime)
+
+```
 
 ## What is mean total number of steps taken per day?
 
+```{r echo=TRUE}
+
+dat_agg<-aggregate(dat$steps,list(date=dat$dattime),sum)
+
+names(dat_agg)[2]<-"Number_steps"
+p<-ggplot(dat_agg,aes(x=date,y=Number_steps))+geom_bar(stat="identity")
+p+ggtitle("Plot of Number of steps per day")
+
+steps_mean<-mean(dat_agg$Number_steps,na.rm=TRUE)
+steps_median<-median(dat_agg$Number_steps,na.rm=TRUE)
+
+```
+
+The mean number of steps per day is `r steps_mean`. The median number of step per day is `r steps_median`.
 
 
 ## What is the average daily activity pattern?
