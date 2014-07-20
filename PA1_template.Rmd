@@ -33,10 +33,37 @@ The mean number of steps per day is `r steps_mean`. The median number of step pe
 
 ## What is the average daily activity pattern?
 
+```{r echo=TRUE}
 
+dat_agg_5min<-aggregate(dat$steps,list(interval=dat$interval),mean,na.rm=TRUE)
+names(dat_agg_5min)[2]<-"Avg"
+p1<-ggplot(dat_agg_5min,aes(x=interval,y=Avg))+geom_line()
+p1<-p1+ggtitle("Mean number of steps per 5 min interval accross all days")
+p1+labs(x="Five min Interval",y="Average number of steps")
+
+# Find the interval corresponding to max  avg. value
+
+p1_max<-dat_agg_5min[dat_agg_5min$Avg==max(dat_agg_5min$Avg),1]
+``` 
+
+The 5 Min interval on average across all the days in the dataset, that contains the maximum number of steps is `r p1_max`
 
 ## Imputing missing values
 
 
 
 ## Are there differences in activity patterns between weekdays and weekends?
+
+```{r echo=TRUE}
+
+dat$week<-ifelse(weekdays(dat$dattime) %in% c('Saturday','Sunday'), 'weekend','weekday')
+
+dat_agg_week<-aggregate(dat$steps,list(interval=dat$interval,week=dat$week),mean,na.rm=TRUE)
+names(dat_agg_week)[3]<-"Avg"
+p3<-ggplot(dat_agg_week,aes(x=interval,y=Avg))+geom_line()
+p3<-p3+facet_wrap(~week,nrow=2)+ggtitle("Mean number of steps per 5 min interval accross Weekdays and Weekends")
+p3+labs(x="Five min Interval",y="Average number of steps")
+```
+
+
+
