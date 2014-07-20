@@ -6,7 +6,6 @@ library(ggplot2)
 
 ```{r echo=TRUE}
 library(ggplot2)
-setwd("~/1ML/1John Hopkins/Reproducible Research/Exercises")
 
 dat<-read.csv("activity.csv")
 
@@ -42,8 +41,6 @@ names(dat_agg_5min)[2]<-"Avg"
 p1<-ggplot(dat_agg_5min,aes(x=interval,y=Avg))+geom_line()
 p1<-p1+ggtitle("Mean number of steps per 5 min interval accross all days")
 p1+labs(x="Five min Interval",y="Average number of steps")
-
-# Find the interval corresponding to max  avg. value
 
 p1_max<-dat_agg_5min[dat_agg_5min$Avg==max(dat_agg_5min$Avg),1]
 ``` 
