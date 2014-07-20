@@ -7,7 +7,6 @@ library(ggplot2)
 
 ```r
 library(ggplot2)
-setwd("~/1ML/1John Hopkins/Reproducible Research/Exercises")
 
 dat<-read.csv("activity.csv")
 
@@ -22,7 +21,7 @@ dat<-cbind(dat,dattime)
 dat_agg<-aggregate(dat$steps,list(date=dat$dattime),sum)
 
 names(dat_agg)[2]<-"Number_steps"
-p<-ggplot(dat_agg,aes(x=date,y=Number_steps))+geom_bar(stat="identity")
+p<-ggplot(dat_agg,aes(x=date,y=Number_steps))+geom_histogram(stat="identity")
 p+ggtitle("Plot of Number of steps per day")
 ```
 
@@ -54,8 +53,6 @@ p1+labs(x="Five min Interval",y="Average number of steps")
 ![plot of chunk unnamed-chunk-3](figure/unnamed-chunk-3.png) 
 
 ```r
-# Find the interval corresponding to max  avg. value
-
 p1_max<-dat_agg_5min[dat_agg_5min$Avg==max(dat_agg_5min$Avg),1]
 ```
 
@@ -63,22 +60,45 @@ The 5 Min interval on average across all the days in the dataset, that contains 
 
 ## Imputing missing values
 
+```r
+miss_row<-sum(ifelse(is.na(dat$steps),1,0))
+
+dat1<-dat
+
+dat1$steps[is.na(dat1$steps)]<-0
+
+dat_agg<-aggregate(dat1$steps,list(date=dat$dattime),sum)
+names(dat_agg)[2]<-"Number_steps"
+p<-ggplot(dat_agg,aes(x=date,y=Number_steps))+geom_histogram(stat="identity")
+p+ggtitle("Plot of Number of steps per day")
+```
+
+![plot of chunk unnamed-chunk-4](figure/unnamed-chunk-4.png) 
+
+```r
+steps_mean1<-mean(dat_agg$Number_steps,na.rm=TRUE)
+steps_median1<-median(dat_agg$Number_steps,na.rm=TRUE)
+```
+ 
+The number of rows with missing values (NAs) is 2304
+
+The mean number of steps per day is 9354.2295. The median number of step per day is 1.0395 &times; 10<sup>4</sup>.
 
 
 ## Are there differences in activity patterns between weekdays and weekends?
 
 
 ```r
-dat$week<-ifelse(weekdays(dat$dattime) %in% c('Saturday','Sunday'), 'weekend','weekday')
+dat1$week<-ifelse(weekdays(dat1$dattime) %in% c('Saturday','Sunday'), 'weekend','weekday')
 
-dat_agg_week<-aggregate(dat$steps,list(interval=dat$interval,week=dat$week),mean,na.rm=TRUE)
+dat_agg_week<-aggregate(dat1$steps,list(interval=dat1$interval,week=dat1$week),mean,na.rm=TRUE)
 names(dat_agg_week)[3]<-"Avg"
 p3<-ggplot(dat_agg_week,aes(x=interval,y=Avg))+geom_line()
 p3<-p3+facet_wrap(~week,nrow=2)+ggtitle("Mean number of steps per 5 min interval accross Weekdays and Weekends")
 p3+labs(x="Five min Interval",y="Average number of steps")
 ```
 
-![plot of chunk unnamed-chunk-4](figure/unnamed-chunk-4.png) 
+![plot of chunk unnamed-chunk-5](figure/unnamed-chunk-5.png) 
 
 
 
