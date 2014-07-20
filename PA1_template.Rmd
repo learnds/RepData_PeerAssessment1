@@ -1,9 +1,11 @@
 # Reproducible Research: Peer Assessment 1
 
+library(ggplot2)
 
 ## Loading and preprocessing the data
 
 ```{r echo=TRUE}
+library(ggplot2)
 setwd("~/1ML/1John Hopkins/Reproducible Research/Exercises")
 
 dat<-read.csv("activity.csv")
